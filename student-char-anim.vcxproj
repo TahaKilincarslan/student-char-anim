@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{A1B2C3D4-0001-0002-0003-000000000001}</ProjectGuid>
+    <RootNamespace>studentcharanim</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)bin\release\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>student-char-anim</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>if "$(N8RO_RELEASE)"=="" (
+  echo [Error] N8RO_RELEASE is not defined. Run C:\N8RO\setup.cmd first.
+  exit /b 1
+)
+if not exist "$(N8RO_RELEASE)\include\astlib\plugin\IPlugin.h" (
+  echo [Error] Missing SDK header: $(N8RO_RELEASE)\include\astlib\plugin\IPlugin.h
+  exit /b 1
+)
+if not exist "$(N8RO_RELEASE)\lib\arkheon-astlib.lib" (
+  echo [Error] Missing SDK library: $(N8RO_RELEASE)\lib\arkheon-astlib.lib
+  exit /b 1
+)</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;ARKHEON_ASTLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(N8RO_RELEASE)\include\astlib;$(N8RO_RELEASE)\include\astsim;$(N8RO_RELEASE)\include\astdb;$(N8RO_RELEASE)\include\n8ro-db;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(N8RO_RELEASE)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>arkheon-astlib.lib;arkheon-astdb.lib;n8ro-db.lib;arkheon-astsim.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>if "$(N8RO_RELEASE_USER_SIM_PLUGINS)"=="" (
+  echo [Error] N8RO_RELEASE_USER_SIM_PLUGINS is not defined. Run C:\N8RO\setup.cmd first.
+  exit /b 1
+)
+if not exist "$(N8RO_RELEASE_USER_SIM_PLUGINS)" (
+  mkdir "$(N8RO_RELEASE_USER_SIM_PLUGINS)"
+)
+copy /Y "$(TargetPath)" "$(N8RO_RELEASE_USER_SIM_PLUGINS)\" &gt;nul
+if errorlevel 1 (
+  echo [Error] Failed to deploy DLL to $(N8RO_RELEASE_USER_SIM_PLUGINS)
+  exit /b 1
+)
+echo [Deploy] student-char-anim.dll copied to $(N8RO_RELEASE_USER_SIM_PLUGINS)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\StudentCharAnimPlugin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\StudentCharAnimPlugin.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
