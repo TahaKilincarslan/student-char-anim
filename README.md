@@ -133,3 +133,5 @@ See `docs/design.md` for full gain table and rationale.
 
 Summary: Kp range 40–70, Kd range 4–7 depending on joint.  
 Tighter joints (knees, ankles) use higher gains; looser joints (shoulders, hips) use lower gains.
+
+!!My DLL files are inside the SIM folder.
